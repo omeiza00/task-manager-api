@@ -19,8 +19,8 @@ export class TaskController {
   // }
 
   @Get()
-  async findAll(@Query('priority') priority?:string, @Query('status') status?:string):Promise<Task[]> {
-    return this.taskService.findAll(priority, status);
+  async findAll(@Query('priority') priority?:string, @Query('status') status?:string, @Query('sort') sort?:string):Promise<Task[]> {
+    return this.taskService.findAll(priority, status, sort);
   }
 
   @Get(':id')

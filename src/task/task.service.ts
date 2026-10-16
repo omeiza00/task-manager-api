@@ -1,9 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto.js';
 import { UpdateTaskDto } from './dto/update-task.dto.js';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Task } from './entities/task.entity.js';
-import { FindOptionsWhere, ILike, Repository } from 'typeorm';
+import { FindOptionsOrder, FindOptionsWhere, ILike, Repository } from 'typeorm';
 
 @Injectable()
 export class TaskService {
@@ -20,7 +20,7 @@ export class TaskService {
   }
 
   // Get all tasks
-  async findAll(priority?: string, status?: string):Promise<Task[]> {
+  async findAll(priority?: string, status?: string, sort?: string):Promise<Task[]> {
     // if (!status) {
     //   return await this.taskRepository.find()
     // }
@@ -35,13 +35,19 @@ export class TaskService {
       where.priority = priority
     }
 
-    return await this.taskRepository.find({
-      // where: [
-      //   {priority: priority},
-      //   {status: status}
-      // ]
+    const order:FindOptionsOrder<Task>={}
 
-      where: where
+    if (sort !== undefined && sort !== 'priority' && sort !== 'createdAt') {
+      throw new BadRequestException(`Invalid sort value. Allowed values are 'priority' and 'createdAt'.`)
+    } else if (sort === 'priority') {
+      order.priority = 'ASC'
+    } else {
+      order.createdAt = 'DESC'
+    }
+
+    return await this.taskRepository.find({
+      where: where,
+      order: order
     });
   }
 
