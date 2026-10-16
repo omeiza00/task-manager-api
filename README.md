@@ -129,6 +129,4 @@ Building this project helped me practise REST API development with NestJS, datab
 ## Author
 
 **Idris Abdulhamid Omeiza**
-
-- GitHub: [@omeiza00](https://github.com/omeiza00)
 </p>
